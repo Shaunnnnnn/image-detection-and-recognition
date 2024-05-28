@@ -21,7 +21,7 @@ def getOCR(im, coors):
     for result in results:
         if len(results) == 1:
             ocr = result[1]
-        if len(results) >1 and len(results[1])>6 and results[2]> conf:
+        if len(results) > 1 and len(results[1]) > 6 and results[2] > conf:
             ocr = result[1]
     
     return str(ocr)
@@ -64,7 +64,6 @@ class DetectionPredictor(BasePredictor):
             frame = getattr(self.dataset, 'frame', 0)
 
         self.data_path = p
-        # save_path = str(self.save_dir / p.name)  # im.jpg
         self.txt_path = str(self.save_dir / 'labels' / p.stem) + ('' if self.dataset.mode == 'image' else f'_{frame}')
         log_string += '%gx%g ' % im.shape[2:]  # print string
         self.annotator = self.get_annotator(im0)
@@ -89,7 +88,7 @@ class DetectionPredictor(BasePredictor):
                 c = int(cls)  # integer class
                 label = None if self.args.hide_labels else (
                     self.model.names[c] if self.args.hide_conf else f'{self.model.names[c]} {conf:.2f}')
-                ocr = getOCR(im0,xyxy)
+                ocr = getOCR(im0, xyxy)
                 if ocr != "":
                     label = ocr
                 self.annotator.box_label(xyxy, label, color=colors(c, True))
@@ -102,7 +101,6 @@ class DetectionPredictor(BasePredictor):
 
         return log_string
 
-
 @hydra.main(version_base=None, config_path=str(DEFAULT_CONFIG.parent), config_name=DEFAULT_CONFIG.name)
 def predict(cfg):
     cfg.model = cfg.model or "yolov8n.pt"
@@ -111,7 +109,7 @@ def predict(cfg):
     predictor = DetectionPredictor(cfg)
     predictor()
 
-
 if __name__ == "__main__":
     reader = easyocr.Reader(['en'])
     predict()
+
